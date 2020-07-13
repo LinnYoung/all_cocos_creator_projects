@@ -14,7 +14,7 @@ export default class MainScene extends cc.Component {
   // 初始坐标值（因为炮台的锚点坐标）我这里屏幕中间最下方（0，height/2)
   private _initialPos: cc.Vec2 = null;
 
-  private bulltePool: cc.NodePool = null; // 子弹节点池
+  public bulltePool: cc.NodePool = null; // 子弹节点池
 
   onLoad() {
     this._initialPos = cc.v2(0, -this.node.height / 2);
