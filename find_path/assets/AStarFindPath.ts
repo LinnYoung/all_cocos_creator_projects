@@ -60,16 +60,34 @@ export default class AStarFindPath {
    * @param startPos 起点坐标
    * @param endPos 终点坐标
    */
-  public findPath(startPos, endPos) {
+  public findPath(startPos, endPos): Array<cc.Vec2> {
+    let path: Array<cc.Vec2> = [];
+
     // 起点
     const startPoint = this.findGrideByPosition(startPos);
     // 终点
     const endPoint = this.findGrideByPosition(endPos);
 
-    if (endPoint.isWalk) {
-      console.error("点击区域不可到达！！！");
-      return;
+    if (!endPoint || !startPoint) {
+      cc.error("找不到终点或起点！！！");
+      return path;
     }
+
+    if (endPoint.isWalk) {
+      cc.error("点击区域不可到达！！！");
+      return path;
+    }
+
+    // 当在同一格子内（格子大才存在）
+    if (startPoint === endPoint) {
+      path.push(endPos);
+      return path;
+    }
+
+    
+
+
+
   }
 
   /**
