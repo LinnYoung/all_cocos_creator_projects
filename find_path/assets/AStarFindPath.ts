@@ -79,9 +79,7 @@ export default class AStarFindPath {
   private findGrideByPosition(pos: cc.Vec2): Point {
     const x = Math.floor(pos.x / this._grideSize);
     const y = Math.floor(pos.y / this._grideSize);
-
     const point: Point = this._data[x * this._column + y];
-
     return point;
   }
 }
