@@ -1,5 +1,11 @@
 // point 属性
 export class Point {
+  /**
+   * Point 构造函数
+   * @param X 行索引值
+   * @param Y 列索引值
+   * @param value 值
+   */
   constructor(public X: number, public Y: number, public value: number) {}
 
   // 总路程 G+H
@@ -12,6 +18,7 @@ export class Point {
   public H: number;
 
   /**
+   * 1可走
    * 值不等3的时候可走
    */
   public isWalk(): boolean {
@@ -20,7 +27,61 @@ export class Point {
 }
 
 export default class AStarFindPath {
-  private _date: Array<Point> = []
+  private _data: Array<Point> = [];
 
-//   findPath(start: Point, end: Point, is) {}
+  /**行 */
+  private _row: number = null;
+  /**列 */
+  private _column: number = null;
+  /**格子相对地图大小*/
+  private _grideSize = null;
+
+  /**
+   * 加载数据
+   */
+  loadData(data: Array<Array<number>>, size: number) {
+    this._row = data.length;
+    this._column = data[0].length;
+    this._grideSize = size;
+
+    // 行（遍历）
+    for (let i = 0; i < data.length; ++i) {
+      // 列（遍历）
+      for (let j = 0; (j = data[i].length); ++j) {
+        // i行j列
+        let point = new Point(i, j, data[i][j]);
+        this._data[i * this._column + j] = point;
+      }
+    }
+  }
+
+  /**
+   *
+   * @param startPos 起点坐标
+   * @param endPos 终点坐标
+   */
+  public findPath(startPos, endPos) {
+    // 起点
+    const startPoint = this.findGrideByPosition(startPos);
+    // 终点
+    const endPoint = this.findGrideByPosition(endPos);
+
+    if (endPoint.isWalk) {
+      console.error("点击区域不可到达！！！");
+      return;
+    }
+  }
+
+  /**
+   * 通过坐标找到对应的格子
+   * @param pos 坐标
+   */
+  private findGrideByPosition(pos: cc.Vec2): Point {
+    const x = Math.floor(pos.x / this._grideSize);
+    const y = Math.floor(pos.y / this._grideSize);
+
+    const point: Point = this._data[x * this._column + y];
+
+    return point;
+  }
 }
