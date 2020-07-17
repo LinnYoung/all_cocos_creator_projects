@@ -30,13 +30,12 @@ export class Point {
     return this.value !== 3;
   }
 
-  public updateWeight(cur: Point, startPoint: Point, endPoint: Point) {
+  public updateWeight(parent: Point, startPoint: Point, endPoint: Point) {
     // 消耗值 g
-    const g0 =
-      cur.X === cur.parentPoint.X || cur.Y === cur.parentPoint.Y ? 10 : 14;
-    const g = cur.parentPoint.G + g0;
+    const g0 = this.X === parent.X || this.Y === parent.Y ? 10 : 14;
+    const g = parent.G + g0;
     // 预估值 h
-    const h = Math.abs(cur.X - endPoint.X) + Math.abs(cur.Y - endPoint.Y);
+    const h = Math.abs(parent.X - endPoint.X) + Math.abs(parent.Y - endPoint.Y);
     const f = g + h;
 
     if (!this.visited || f < this.F) {
@@ -162,7 +161,7 @@ export default class AStarFindPath {
     let openList = new BinaryHeap();
     openList.insert(startPoint);
 
-    var minPoint = null;
+    var minPoint: Point = null;
     while (!endPoint.closed) {
       const cur = openList.pop();
       if (!cur) {
@@ -172,11 +171,46 @@ export default class AStarFindPath {
       cur.closed = true;
 
       // 得到相邻Point
-      let nearPoints = this.findNearPoints(startPoint);
+      let nearPoints = this.findNearPoints(cur);
 
-    //   nearPoints.forEach
+      nearPoints.forEach((nearPoint) => {
+        const changed = nearPoint.updateWeight(cur, startPoint, endPoint);
+        if (!minPoint || nearPoint.F <= minPoint.F) {
+          minPoint = nearPoint;
+        }
 
+        if (nearPoint.visited) {
+          // 已被计算过
+          if (changed) {
+            nearPoint.parentPoint = cur;
+            openList.update(nearPoint);
+          }
+        } else {
+          // 未计算过
+          nearPoint.parentPoint = cur;
+          openList.insert(nearPoint);
+        }
+      });
     }
+
+    if (endPoint.closed) {
+      let cur2 = endPoint.closed ? endPoint : minPoint;
+      let pointPath = [cur2];
+      while (cur2.parentPoint) {
+        pointPath.push(cur2.parentPoint);
+        cur2 = cur2.parentPoint;
+      }
+
+      for (let i = pointPath.length - 1; i >= 0; --i) {
+        path.push(
+          cc.v2(
+            pointPath[i].X * this._grideSize + this._grideSize / 2,
+            pointPath[i].Y * this._grideSize + this._grideSize / 2
+          )
+        );
+      }
+    }
+    return path;
   }
 
   /**
