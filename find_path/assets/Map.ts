@@ -60,6 +60,7 @@ export default class Map extends cc.Component {
     const pos = this.content.convertToNodeSpaceAR(event.getLocation());
     this.positions = this.findPath.findPath(this.player.position, pos);
     if (this.positions && this.positions.length > 0) {
+      this.player.stopActionByTag(1);
       this.startMove();
     }
   }
@@ -77,6 +78,7 @@ export default class Map extends cc.Component {
         .call(() => {
           this.startMove();
         })
+        .tag(1)
         .start();
     }
   }
