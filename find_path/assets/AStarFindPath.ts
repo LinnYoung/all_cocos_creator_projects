@@ -264,7 +264,7 @@ export default class AStarFindPath {
    */
   private nearPoint(x: number, y: number, list: Array<Point>): boolean {
     const point = this.findPointByGridePos(x, y);
-    if (point && !point.closed && point.isWalk) {
+    if (point && !point.closed && point.isWalk()) {
       list.push(point);
       return true;
     }
