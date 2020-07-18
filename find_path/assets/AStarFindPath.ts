@@ -112,11 +112,10 @@ export default class AStarFindPath {
     this._row = data.length;
     this._column = data[0].length;
     this._grideSize = size;
-
     // 行（遍历）
     for (let i = 0; i < data.length; ++i) {
       // 列（遍历）
-      for (let j = 0; (j = data[i].length); ++j) {
+      for (let j = 0; j < data[i].length; ++j) {
         // i行j列
         let point = new Point(j, i, data[i][j]);
         this._data[i * this._column + j] = point;
@@ -138,12 +137,12 @@ export default class AStarFindPath {
     const endPoint = this.findGrideByPosition(endPos);
 
     if (!endPoint || !startPoint) {
-      cc.error("找不到终点或起点！！！");
+      console.error("找不到终点或起点！！！");
       return path;
     }
 
     if (endPoint.isWalk) {
-      cc.error("点击区域不可到达！！！");
+      console.error("点击区域不可到达！！！");
       return path;
     }
 
@@ -214,7 +213,7 @@ export default class AStarFindPath {
   }
 
   /**
-   *    寻找终点路径
+   *    寻找附近所有节点
    * @param parentPoint 父点
    * @param endPoint 终点
    */
@@ -256,7 +255,7 @@ export default class AStarFindPath {
   }
 
   /**
-   * 得到附近的节点
+   * 附近节点的信息
    * @param x
    * @param y
    * @param list
@@ -275,10 +274,10 @@ export default class AStarFindPath {
    * @param x 列
    * @param y 行
    */
-  private findPointByGridePos(x: number, y: number): Point {
+  public findPointByGridePos(x: number, y: number): Point {
     if (x >= this._column || x < 0 || y < 0 || y > this._row) {
       // 超出地图
-      cc.error("地图外的点不存在！！！");
+      console.error("地图外的点不存在！！！");
       return null;
     }
 
