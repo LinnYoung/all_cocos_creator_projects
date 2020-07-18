@@ -102,7 +102,7 @@ export default class AStarFindPath {
   /**列 */
   private _column: number = null;
   /**格子相对地图大小*/
-  private _grideSize = null;
+  private _grideSize: number = null;
 
   /**
    * 数据为一行一行的填写
@@ -141,7 +141,7 @@ export default class AStarFindPath {
       return path;
     }
 
-    if (endPoint.isWalk) {
+    if (!endPoint.isWalk()) {
       console.error("点击区域不可到达！！！");
       return path;
     }
@@ -248,9 +248,11 @@ export default class AStarFindPath {
    * @param pos 坐标
    */
   private findGrideByPosition(pos: cc.Vec2): Point {
+    // 列
     const x = Math.floor(pos.x / this._grideSize);
+    // 行
     const y = Math.floor(pos.y / this._grideSize);
-    const point: Point = this._data[x * this._column + y];
+    const point: Point = this._data[y * this._column + x];
     return point;
   }
 
@@ -277,7 +279,6 @@ export default class AStarFindPath {
   public findPointByGridePos(x: number, y: number): Point {
     if (x >= this._column || x < 0 || y < 0 || y > this._row) {
       // 超出地图
-      console.error("地图外的点不存在！！！");
       return null;
     }
 
