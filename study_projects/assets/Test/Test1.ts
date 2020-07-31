@@ -1,15 +1,29 @@
-
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator
 
 @ccclass
 export default class Test extends cc.Component {
 
-  @property(cc.Layout)
-  layout: cc.Layout = null
+    @property(cc.ScrollView)
+    scrollview: cc.ScrollView = null
 
-  onLoad(){
-      cc.log(this.layout.paddingTop, this.layout.paddingLeft, this.layout.paddingBottom, this.layout.paddingBottom, this.layout.spacingX, this.layout.spacingY)
-  }
+    @property(cc.Node)
+    view: cc.Node = null
+
+    onLoad() {
+        cc.log('lllll:', this.view.getBoundingBox(), this.view.getBoundingBoxToWorld())
+        // this.scrollview.content.children.forEach((item) => {
+        //     cc.log(
+        //         'rect: ',
+        //         item.getBoundingBoxToWorld(),
+
+        //         this.view.getBoundingBoxToWorld(),
+
+        //         this.view
+        //             .getBoundingBoxToWorld()
+        //             .intersects(item.getBoundingBoxToWorld())
+        //     )
+        // })
+    }
 
     // update (dt) {}
 }
