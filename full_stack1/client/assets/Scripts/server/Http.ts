@@ -13,7 +13,7 @@ class Http {
     // 超时设置
     const timer = setTimeout(() => {
       timeout = true;
-      console.log("lllllll");
+      console.log("中断连接。。。");
       httpRequest.abort();
     }, time);
 
