@@ -31,7 +31,7 @@ class Http {
     }
 
     httpRequest.onreadystatechange = function () {
-      const response = httpRequest.responseType;
+      const response = httpRequest.response;
       console.log(
         "http url cb: " +
           url +
