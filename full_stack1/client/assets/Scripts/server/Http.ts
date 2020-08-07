@@ -2,19 +2,21 @@ export interface RequestObj {
   url: string;
   data?: {};
   method?: string;
+  fail?: (T) => void;
   success?: (T: any) => void;
 }
 
 class Http {
+  private httpRequest = new XMLHttpRequest();
+
   request(obj: RequestObj) {
-    const httpRequest = new XMLHttpRequest();
     const time = 5 * 1000;
     let timeout = false;
     // 超时设置
     const timer = setTimeout(() => {
       timeout = true;
       console.log("中断连接。。。");
-      httpRequest.abort();
+      this.httpRequest.abort();
     }, time);
 
     let url = obj.url;
@@ -30,22 +32,22 @@ class Http {
       url += kvs.join("&");
     }
 
-    httpRequest.onreadystatechange = function () {
-      const response = httpRequest.response;
+    this.httpRequest.onreadystatechange = () => {
+      const response = this.httpRequest.response;
       console.log(
         "http url cb: " +
           url +
           " readyState: " +
-          httpRequest.readyState +
+          this.httpRequest.readyState +
           " status: " +
-          httpRequest.status
+          this.httpRequest.status
       );
       clearTimeout(timer);
 
       if (
-        httpRequest.readyState == 4 &&
-        httpRequest.status >= 200 &&
-        httpRequest.status < 400
+        this.httpRequest.readyState == 4 &&
+        this.httpRequest.status >= 200 &&
+        this.httpRequest.status < 400
       ) {
         console.log("http success: " + url + "resp: " + response);
         if (typeof obj.success === "function") {
@@ -54,8 +56,8 @@ class Http {
       }
     };
 
-    httpRequest.open(obj.method ? obj.method : "GET", url, true);
-    httpRequest.send();
+    this.httpRequest.open(obj.method ? obj.method : "GET", url, true);
+    this.httpRequest.send();
   }
 }
 
