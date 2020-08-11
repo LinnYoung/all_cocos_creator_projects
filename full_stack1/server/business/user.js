@@ -14,17 +14,17 @@ class User {
     const create = (userID) => {
       // 获取到用户ID后创建用户
       const userKey = constData.GLOBAL_USER_ID + userID;
-      const userData = {
+      const userData = JSON.stringify({
         name: account,
         password: pwd,
         coin: 0,
         diamond: 0,
         head: "",
         friends: [],
-      };
+      });
 
       // 数据库创建用户
-      redisDB.hset(userKey, userData, (err, result) => {
+      redisDB.hmset(userKey, userData, (err, result) => {
         // 返回给用户数据
         let data = {
           userID: userID,
@@ -36,9 +36,9 @@ class User {
             error: err,
             note: "create user error!!",
           };
-          return callback(JSON.stringify(data));
+          return callback(data);
         }
-        callback(JSON.stringify(data));
+        callback(data);
       });
     };
 

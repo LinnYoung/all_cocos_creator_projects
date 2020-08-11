@@ -3,8 +3,9 @@ let redisDB = {};
 const redis = require("redis");
 const { read } = require("fs");
 const constData = require("../util/constData");
+const { createCipher } = require("crypto");
 
-const client = redis.createClient(8182,'127.0.0.1');
+const client = redis.createClient(6379, "127.0.0.1", {});
 
 client.on("ready", (error) => {
   if (error) {
@@ -68,9 +69,10 @@ redisDB.get = function (key, callback) {
   });
 };
 
+
 // 哈希操作
-redisDB.hset = function (key, filed, val, callback) {
-  client.hset(key, filed, val, function (err, result) {
+redisDB.hmset = function (key, filed, val, callback) {
+  client.hmset(key, filed, val, function (err, result) {
     if (err) {
       console.log("redis client hset ser val error = ", err);
       callback && callback(err);

@@ -15,6 +15,7 @@ const server = http.createServer((req, res) => {
 
   if (Router[pathname]) {
     Router[pathname](req, res, (resData) => {
+      console.log("data: ", resData);
       res.write(JSON.stringify(resData));
     });
   } else {

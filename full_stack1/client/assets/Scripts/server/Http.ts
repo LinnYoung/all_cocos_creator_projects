@@ -49,7 +49,7 @@ class Http {
         this.httpRequest.status >= 200 &&
         this.httpRequest.status < 400
       ) {
-        console.log("http success: " + url + "resp: " + response);
+        console.log("http success: " + url + " resp: " + response);
         if (typeof obj.success === "function") {
           obj.success(JSON.parse(response));
         }
