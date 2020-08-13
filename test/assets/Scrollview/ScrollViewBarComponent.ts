@@ -10,7 +10,7 @@ const { ccclass, property } = cc._decorator;
  */
 
 @ccclass
-export default class ScrollViewComponent extends cc.Component {
+export default class ScrollViewBarComponent extends cc.Component {
   @property(cc.ScrollView)
   scrollView: cc.ScrollView = null;
 
