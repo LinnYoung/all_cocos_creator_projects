@@ -22,7 +22,7 @@ export default class Test extends cc.Component implements ContentDataProvider {
     this.content.init(this)
 
     this.node.on('touchend', ()=>{
-        this.count --;
+        this.count ++;
         this.content.reload()
        cc.log( this.content.node.getContentSize())
     })

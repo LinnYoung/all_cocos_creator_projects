@@ -59,8 +59,8 @@ export default class ContentComponent extends cc.Component {
     if (this._items.length !== this._provider.cellCount()) {
       if (this._items.length > this._provider.cellCount()) {
         let diffVaule = this._items.length - this._provider.cellCount();
-        this._items.splice(this._provider.cellCount() - 1, diffVaule);
-        this.node.children.splice(this._provider.cellCount() - 1, diffVaule);
+        this._items.splice(this._provider.cellCount(), diffVaule);
+        this.node.children.splice(this._provider.cellCount(), diffVaule);
       } else {
         for (let i = this._items.length; i < this._provider.cellCount(); ++i) {
           this.createItem(i);
