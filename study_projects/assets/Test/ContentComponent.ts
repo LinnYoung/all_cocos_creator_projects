@@ -40,9 +40,12 @@ export default class ContentComponent extends cc.Component {
 
   // 初始化调用
   init(provider: ContentDataProvider) {
+    this.layout.enabled = false;
     this._provider = provider;
     this.item = provider.cellNode();
     this.load();
+    this.setCotentSize();
+    this.handleScrolling();
   }
 
   // 刷新时调用
@@ -57,14 +60,69 @@ export default class ContentComponent extends cc.Component {
           this.createItem(i);
         }
       }
+      this.setCotentSize();
       this.handleScrolling();
+    }
+  }
+
+  // 设置content 的大小（由于layout去掉了）
+  setCotentSize() {
+    switch (this.layout.type) {
+      case cc.Layout.Type.HORIZONTAL:
+        this.node.setContentSize(
+          cc.size(
+            (this._provider.cellCount() - 1) *
+              (this.item.width + this.layout.spacingX) +
+              this.item.width +
+              this.layout.paddingLeft +
+              this.layout.paddingRight,
+            this.node.height
+          )
+        );
+        break;
+      case cc.Layout.Type.VERTICAL:
+        this.node.setContentSize(
+          cc.size(
+            this.node.width,
+            (this._provider.cellCount() - 1) *
+              (this.item.height + this.layout.spacingY) +
+              this.item.height +
+              this.layout.paddingTop +
+              this.layout.paddingBottom
+          )
+        );
+        break;
+      case cc.Layout.Type.GRID:
+        if (this.layout.startAxis === cc.Layout.AxisDirection.HORIZONTAL) {
+          this.node.setContentSize(
+            cc.size(
+              (Math.ceil(this._provider.cellCount() / this._oneColOfNum) - 1) *
+                (this.item.width + this.layout.spacingX) +
+                this.item.width +
+                this.layout.paddingLeft +
+                this.layout.paddingRight,
+              this.node.height
+            )
+          );
+        } else if (this.layout.startAxis === cc.Layout.AxisDirection.VERTICAL) {
+          this.node.setContentSize(
+            cc.size(
+              this.node.width,
+              (Math.ceil(this._provider.cellCount() / this._oneRowOfNum) - 1) *
+                (this.item.height + this.layout.spacingY) +
+                this.item.height +
+                this.layout.paddingTop +
+                this.layout.paddingBottom
+            )
+          );
+        }
+        break;
     }
   }
 
   onLoad() {
     this.regestEvent();
-    this.layout.enabled = false;
-    this.handleScrolling();
+    // this.layout.enabled = false;
   }
 
   regestEvent() {
@@ -98,7 +156,6 @@ export default class ContentComponent extends cc.Component {
   createItem(index: number) {
     // 算位置，算出相应的坐标 （Layout，可以得出 位置）
     let position: cc.Vec2 = null;
-
     switch (this.layout.type) {
       case cc.Layout.Type.HORIZONTAL:
         if (index === 0) {
@@ -156,6 +213,7 @@ export default class ContentComponent extends cc.Component {
     }
 
     let item = { index: index, position: position } as Cell;
+
     this._items[index] = item;
   }
 
