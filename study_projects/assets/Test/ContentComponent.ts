@@ -1,4 +1,10 @@
 const { ccclass, property } = cc._decorator;
+
+/**
+ * 该组件只是用于从上往下，从左向右的列表！
+ * ，content 的锚点设置在 （0，1）做上角 （警告：否则坐标会有问题）
+ */
+
 export interface ContentDataProvider {
   /**
    * 数据长度
@@ -25,7 +31,7 @@ interface Cell {
 /**
  * 使用方法，把content 的锚点设置到左上角（0，1）
  *  不支持（垂直和水平同时滚动）
- *  未完成
+ *  完成
  */
 @ccclass
 export default class ContentComponent extends cc.Component {
@@ -159,27 +165,35 @@ export default class ContentComponent extends cc.Component {
     switch (this.layout.type) {
       case cc.Layout.Type.HORIZONTAL:
         if (index === 0) {
-          position = cc.v2(this.layout.paddingLeft + this.item.width / 2, 0);
+          position = cc.v2(
+            this.layout.paddingLeft + this.item.width / 2,
+            -this.item.width
+          );
         } else {
           position = cc.v2(
             this.layout.paddingLeft +
               this.item.width * index +
               this.item.width / 2 +
               this.layout.spacingX,
-            0
+            -this.item.width
           );
         }
         break;
       case cc.Layout.Type.VERTICAL:
         if (index === 0) {
-          position = cc.v2(0, this.layout.paddingTop + this.item.height / 2);
+          position = cc.v2(
+            this.node.width / 2,
+            -this.layout.paddingTop + this.item.height / 2
+          );
         } else {
           position = cc.v2(
-            0,
-            this.layout.paddingTop +
+            this.node.width / 2,
+            -(
+              this.layout.paddingTop +
               this.item.height * index +
               this.item.height / 2 +
               this.layout.spacingY
+            )
           );
         }
 
@@ -191,10 +205,12 @@ export default class ContentComponent extends cc.Component {
               (index % this._oneRowOfNum) *
                 (this.item.width + this.layout.spacingX) +
               this.item.width / 2,
-            this.layout.paddingTop +
+            -(
+              this.layout.paddingTop +
               Math.floor(index / this._oneRowOfNum) *
                 (this.item.height + this.layout.spacingY) +
               this.item.height / 2
+            )
           );
         } else if (this.layout.startAxis === cc.Layout.AxisDirection.VERTICAL) {
           // 纵向排列 向右扩张
@@ -203,10 +219,12 @@ export default class ContentComponent extends cc.Component {
               (index / this._oneColOfNum) *
                 (this.item.width + this.layout.spacingX) +
               this.item.width / 2,
-            this.layout.paddingTop +
+            -(
+              this.layout.paddingTop +
               Math.floor(index % this._oneRowOfNum) *
                 (this.item.height + this.layout.spacingY) +
               this.item.height / 2
+            )
           );
         }
         break;
@@ -220,11 +238,11 @@ export default class ContentComponent extends cc.Component {
   private handleScrolling() {
     const view = this.node.parent;
     // 获取左下角坐标
-    const viewWorldPos = view.convertToWorldSpace(cc.Vec2.ZERO);
+    const viewWorldPos = view.convertToWorldSpaceAR(cc.Vec2.ZERO);
 
     const viewWorldRect = cc.rect(
-      viewWorldPos.x,
-      viewWorldPos.y,
+      viewWorldPos.x - view.width / 2,
+      viewWorldPos.y - view.height / 2,
       view.width,
       view.height
     );
@@ -240,8 +258,8 @@ export default class ContentComponent extends cc.Component {
       const cellWorldRect = cc.rect(
         cellWorldPos.x,
         cellWorldPos.y,
-        this.node.width,
-        this.node.height
+        this.item.width,
+        this.item.height
       );
 
       const visible = viewWorldRect.intersects(cellWorldRect);
@@ -254,11 +272,12 @@ export default class ContentComponent extends cc.Component {
     let item: cc.Node = this.node.children[cell.index];
     if (visible) {
       if (item) {
-        this.node.children[cell.index].active = true;
+        item.active = true;
       } else {
         item = cc.instantiate(this.item);
         item.setPosition(cell.position);
-        this.node.children[cell.index] = item;
+        // this.node.children[cell.index] = item;
+        this.node.addChild(item)
       }
       this._provider.upateCell(item, cell.index);
     } else {

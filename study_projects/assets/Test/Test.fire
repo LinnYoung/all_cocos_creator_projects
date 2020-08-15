@@ -174,7 +174,7 @@
       "array": [
         0,
         0,
-        420.0223208354528,
+        331.64285847389226,
         0,
         0,
         0,
@@ -411,14 +411,14 @@
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 1
     },
     "_trs": {
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        0,
+        -110,
         250,
         0,
         0,
@@ -484,7 +484,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        0,
+        110,
         -50,
         0,
         0,
@@ -697,7 +697,7 @@
     "vertical": true,
     "inertia": true,
     "brake": 0.75,
-    "elastic": true,
+    "elastic": false,
     "bounceDuration": 0.23,
     "scrollEvents": [],
     "cancelInnerEvents": true,
