@@ -28,7 +28,7 @@ interface Cell {
  *  未完成
  */
 @ccclass
-export default class ScrollViewComponent extends cc.Component {
+export default class ContentComponent extends cc.Component {
   @property(cc.ScrollView)
   scrollView: cc.ScrollView = null;
 
@@ -38,13 +38,37 @@ export default class ScrollViewComponent extends cc.Component {
   private _provider: ContentDataProvider = null;
   private item: cc.Node = null;
 
+  // 初始化调用
   init(provider: ContentDataProvider) {
     this._provider = provider;
     this.item = provider.cellNode();
+    this.load();
+  }
+
+  // 刷新时调用
+  reload() {
+    if (this._items.length !== this._provider.cellCount()) {
+      if (this._items.length > this._provider.cellCount()) {
+        let diffVaule = this._items.length - this._provider.cellCount();
+        this._items.splice(this._provider.cellCount() - 1, diffVaule);
+        this.node.children.splice(this._provider.cellCount() - 1, diffVaule);
+      } else {
+        for (let i = this._items.length; i < this._provider.cellCount(); ++i) {
+          this.createItem(i);
+        }
+      }
+      this.handleScrolling();
+    }
+  }
+
+  onLoad() {
+    this.regestEvent();
+    this.layout.enabled = false;
+    this.handleScrolling();
   }
 
   regestEvent() {
-    // this.scrollView.node.on('scrolling', this.handleScrolling, this)
+    this.scrollView.node.on("scrolling", this.handleScrolling, this);
   }
 
   /**所有数据对应的Cell结构数据 */
@@ -169,12 +193,13 @@ export default class ScrollViewComponent extends cc.Component {
 
   // 控制节点
   private ctorlItem(cell: Cell, visible: boolean) {
-    let item = this.node[cell.index];
+    let item: cc.Node = this.node.children[cell.index];
     if (visible) {
       if (item) {
         this.node.children[cell.index].active = true;
       } else {
         item = cc.instantiate(this.item);
+        item.setPosition(cell.position);
         this.node.children[cell.index] = item;
       }
       this._provider.upateCell(item, cell.index);

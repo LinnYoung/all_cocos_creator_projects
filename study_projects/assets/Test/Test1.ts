@@ -1,32 +1,34 @@
+import ContentComponent, { ContentDataProvider } from "./ContentComponent";
+
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class Test extends cc.Component {
-  @property(cc.ScrollView)
-  scrollview: cc.ScrollView = null;
+export default class Test extends cc.Component implements ContentDataProvider {
+  @property(ContentComponent)
+  content: ContentComponent = null;
 
   @property(cc.Node)
-  view: cc.Node = null;
+  item: cc.Node = null;
 
   onLoad() {
-    // cc.log(
-    //   "lllll:",
-    //   this.view.convertToWorldSpace(cc.v2(0, 0)),
-    //   this.view.convertToWorldSpaceAR(cc.v2(0, 0))
-    // );
-
-    const w1 = this.view.convertToWorldSpaceAR(cc.v2(0, 0));
-    const w2 = this.scrollview.node.convertToWorldSpaceAR(
-      cc.v2(0, -125)
-    );
-    cc.log(w1, w2);
-    const ww1 = this.view.convertToWorldSpace(cc.v2(0, 0));
-    const ww2 = this.scrollview.node.convertToWorldSpaceAR(
-      cc.v2(0 - this.view.width / 2, -125 - this.view.height / 2)
-    );
-
-    cc.log(ww1, ww2);
+    // this.isgo = true;
+    // for (let i = 2; i < 10001; ++i) {
+    //   const item = cc.instantiate(this.item);
+    //   item.getChildByName("value").getComponent(cc.Label).string = i + "";
+    //   this.content.addChild(item);
+    // }
+    this.content.init(this)
   }
 
-  // update (dt) {}
+  cellCount() {
+    return 10001;
+  }
+
+  cellNode() {
+    return this.item;
+  }
+
+  upateCell(item: cc.Node, index: number) {
+    item.getChildByName("value").getComponent(cc.Label).string = index + "";
+  }
 }
