@@ -10,6 +10,7 @@ export default class Test extends cc.Component implements ContentDataProvider {
   @property(cc.Node)
   item: cc.Node = null;
 
+  private count  =  101
   onLoad() {
     // this.isgo = true;
     // for (let i = 2; i < 10001; ++i) {
@@ -17,11 +18,19 @@ export default class Test extends cc.Component implements ContentDataProvider {
     //   item.getChildByName("value").getComponent(cc.Label).string = i + "";
     //   this.content.addChild(item);
     // }
+
     this.content.init(this)
+
+    this.node.on('touchend', ()=>{
+        this.count --;
+        this.content.reload()
+       cc.log( this.content.node.getContentSize())
+    })
+
   }
 
   cellCount() {
-    return 10001;
+    return this.count;
   }
 
   cellNode() {
@@ -31,4 +40,7 @@ export default class Test extends cc.Component implements ContentDataProvider {
   upateCell(item: cc.Node, index: number) {
     item.getChildByName("value").getComponent(cc.Label).string = index + "";
   }
+
+
+
 }

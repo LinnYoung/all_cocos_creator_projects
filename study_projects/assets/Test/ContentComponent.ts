@@ -102,23 +102,23 @@ export default class ContentComponent extends cc.Component {
         if (this.layout.startAxis === cc.Layout.AxisDirection.HORIZONTAL) {
           this.node.setContentSize(
             cc.size(
-              (Math.ceil(this._provider.cellCount() / this._oneColOfNum) - 1) *
-                (this.item.width + this.layout.spacingX) +
-                this.item.width +
-                this.layout.paddingLeft +
-                this.layout.paddingRight,
-              this.node.height
-            )
-          );
-        } else if (this.layout.startAxis === cc.Layout.AxisDirection.VERTICAL) {
-          this.node.setContentSize(
-            cc.size(
               this.node.width,
               (Math.ceil(this._provider.cellCount() / this._oneRowOfNum) - 1) *
                 (this.item.height + this.layout.spacingY) +
                 this.item.height +
                 this.layout.paddingTop +
                 this.layout.paddingBottom
+            )
+          );
+        } else if (this.layout.startAxis === cc.Layout.AxisDirection.VERTICAL) {
+          this.node.setContentSize(
+            cc.size(
+              (Math.ceil(this._provider.cellCount() / this._oneColOfNum) - 1) *
+                (this.item.width + this.layout.spacingX) +
+                this.item.width +
+                this.layout.paddingLeft +
+                this.layout.paddingRight,
+              this.node.height
             )
           );
         }
@@ -277,7 +277,7 @@ export default class ContentComponent extends cc.Component {
         item = cc.instantiate(this.item);
         item.setPosition(cell.position);
         // this.node.children[cell.index] = item;
-        this.node.addChild(item)
+        this.node.addChild(item);
       }
       this._provider.upateCell(item, cell.index);
     } else {
@@ -294,13 +294,12 @@ export default class ContentComponent extends cc.Component {
   _computeOneRowOfNum() {
     // 剩余宽度
     const _surplusWidth =
-      this.scrollView.content.width -
-      this.layout.paddingLeft -
-      this.layout.paddingRight;
+      this.scrollView.content.width - this.layout.paddingLeft - this.item.width;
+    this.layout.paddingRight;
     // 一个节点所在宽度
     const _width = this.item.width + this.layout.spacingX;
 
-    this._oneRowOfNum = Math.floor(_surplusWidth / _width);
+    this._oneRowOfNum += Math.floor(_surplusWidth / _width);
     // 剩余宽度是否还能容下一个节点
     if (_surplusWidth % this._oneRowOfNum >= this.item.width) {
       this._oneRowOfNum++;
@@ -316,11 +315,12 @@ export default class ContentComponent extends cc.Component {
     const _surplusHeight =
       this.scrollView.content.height -
       this.layout.paddingTop -
-      this.layout.paddingBottom;
+      this.item.height;
+    this.layout.paddingBottom;
     // 一个节点所在高度
     const _height = this.item.height + this.layout.spacingY;
 
-    this._oneColOfNum = Math.floor(_surplusHeight / _height);
+    this._oneColOfNum += Math.floor(_surplusHeight / _height);
     // 剩余高度是否还能容下一个节点
     if (_surplusHeight % this._oneColOfNum >= this.item.height) {
       this._oneColOfNum++;
