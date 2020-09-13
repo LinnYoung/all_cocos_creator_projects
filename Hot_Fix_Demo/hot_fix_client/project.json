@@ -1,0 +1,8 @@
+{
+  "engine": "cocos-creator-js",
+  "packages": "packages",
+  "name": "hot_fix_client",
+  "id": "221ee801-ac58-47da-86d8-0446fbb48300",
+  "version": "2.4.0",
+  "isNew": false
+}
